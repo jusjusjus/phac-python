@@ -6,14 +6,14 @@ from .util import indices_of_binned_phase
 _SMALL = 1e-9
 
 def normalize(x: np.ndarray) -> np.ndarray:
+    x = x.astype(np.float64)
     try:
+        assert np.all(x >= 0.0), "values must be positive semi-definite."
         s = x.sum()
-        assert np.all(x>=0.0), "values must be positive semi-definite."
-        assert s>0.0, "sum must be positive."
+        assert s > 0.0, "sum must be positive."
+        return x / s
     except AssertionError as err:
         raise ValueError(str(err))
-    x = x.astype(np.float64)
-    return x/x.sum()
 
 def shannon_entropy(P: np.ndarray) -> float:
     try:
