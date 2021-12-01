@@ -1,21 +1,22 @@
-
 import numpy as np
 
+
 def square_wave(t: np.ndarray, frequency: float,
-        jitter: float, tilt: float) -> np.ndarray:
+                jitter: float, tilt: float) -> np.ndarray:
     period = 1/frequency
     y = np.zeros(t.shape[0])
-    tmax = t[-1]
     for ti in np.arange(0, t[-1], period):
         tti = ti + jitter*period*np.random.randn()
         n0, n1 = t.searchsorted((tti, tti+period*tilt))
         y[n0:n1] = 1.0
+
     return y-y.mean()
 
+
 def triangle_wave(t: np.ndarray,
-        frequency: float=20.0,
-        jitter: float=0.2,
-        tilt: float=0.8) -> np.ndarray:
+                  frequency: float = 20.0,
+                  jitter: float = 0.2,
+                  tilt: float = 0.8) -> np.ndarray:
     """return triangular wave patterns sampled at t
 
     Parameters

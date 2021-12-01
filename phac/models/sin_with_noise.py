@@ -1,13 +1,12 @@
-
 import numpy as np
-from scipy.signal import butter as _butter
-from scipy.signal import filtfilt as _filtfilt
 from typing import Tuple
 from ..util import filtfilt
+
 
 def random_sin(t: np.ndarray, frequency: float, dphi: float) -> np.ndarray:
     random_phase_walk = dphi * np.random.randn(t.size).cumsum()
     return np.sin(2.*np.pi*frequency*t + random_phase_walk)
+
 
 def filtered_noise(n: int, sr: float, band: Tuple[float, float]) -> np.ndarray:
     """"""
@@ -16,21 +15,32 @@ def filtered_noise(n: int, sr: float, band: Tuple[float, float]) -> np.ndarray:
     x = x/np.std(x)
     return x
 
-def validate_parameters(frequency, dphi, band, amplitude, coupling, sampling_rate):
+
+def validate_parameters(frequency, dphi, band, amplitude, coupling,
+                        sampling_rate):
     """raise ValueError if parameters outside the acceptable range"""
     try:
-        assert dphi < frequency/3, "dphi (%s) should be smaller than 25 pcnt the frequency (%s Hz)"%(dphi, frequency)
-        assert  band[1] is None or band[0] < band[1], "bandpass parameters must be ordered %s"%str(band)
-        assert band[0] > frequency, "Lower band limit of '%s' should be > frequency=%s"%(band, frequency)
-        assert band[1] is None or band[1] < sampling_rate/2, "Upper band limit of '%s' should be < sampling rate=%s"%(band, sampling_rate)
-        assert amplitude >= 0.0, "amplitude of noisy modulated signal should be larger or equal than zero"
-        assert 0 <= coupling <= 1, "coupling has to be between 0 (no coupling) and 1 (full coupling)"
+        assert dphi < frequency/3, "dphi (%s) should be smaller than \
+                25 pcnt the frequency (%s Hz)" % (dphi, frequency)
+        assert band[1] is None or band[0] < band[1], "bandpass parameters \
+                must be ordered %s" % str(band)
+        assert band[0] > frequency, "Lower band limit of '%s' should be > \
+                frequency=%s" % (band, frequency)
+        assert band[1] is None or band[1] < sampling_rate/2, "Upper band \
+                limit of '%s' should be < sampling rate=%s" % (
+                        band, sampling_rate)
+        assert amplitude >= 0.0, "amplitude of noisy modulated signal \
+                should be larger or equal than zero"
+        assert 0 <= coupling <= 1, "coupling has to be between 0 (no \
+                coupling) and 1 (full coupling)"
     except AssertionError as err:
         raise ValueError(str(err))
 
-def sin_with_noise(t: np.ndarray, frequency: float=20.0,
-        dphi: float=3.0, band: Tuple[float, float]=(50.0, 90.0),
-        amplitude: float=0.5, coupling: float=0.5) -> np.ndarray:
+
+def sin_with_noise(t: np.ndarray, frequency: float = 20.0,
+                   dphi: float = 3.0, band: Tuple[float, float] = (50.0, 90.0),
+                   amplitude: float = 0.5,
+                   coupling: float = 0.5) -> np.ndarray:
     """
     Sinusoidal rhythm with modulated high-frequency noise have properties
 

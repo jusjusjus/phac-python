@@ -1,4 +1,3 @@
-
 from typing import List, Tuple
 from collections import namedtuple
 
@@ -6,7 +5,10 @@ import numpy as np
 
 from .frequency_band import FrequencyBand
 
-_FilterSeries: Tuple[float, float, float] = namedtuple("FilterSeries", "min max width")
+_FilterSeries: Tuple[float, float, float] = namedtuple(  # type: ignore
+    "FilterSeries", "min max width"
+)
+
 
 class FilterSeries(_FilterSeries):
 
@@ -14,7 +16,7 @@ class FilterSeries(_FilterSeries):
 
     @property
     def num(self) -> int:
-        return 1+self._resolution*(self.max-self.min)/self.width
+        return 1 + self._resolution * (self.max-self.min) / self.width
 
     @property
     def df(self) -> float:

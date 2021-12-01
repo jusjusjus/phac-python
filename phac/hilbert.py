@@ -1,21 +1,20 @@
-
 import numpy as np
 
 from .util import trapezoid, _hilbert
 
 
 class SegmentedSignal:
-        
-    def __init__(self, nsegment: int, noverlap: int, n: int=None,
-            arr: np.ndarray=None, dtype=np.float64):
+
+    def __init__(self, nsegment: int, noverlap: int, n: int = None,
+                 arr: np.ndarray = None, dtype=np.float64):
         self.arr = np.zeros(n, dtype=dtype) if arr is None else arr
         self.nsegment = nsegment
         self.noverlap = noverlap
-    
+
     @property
     def size(self) -> int:
         return self.arr.size
-            
+
     @property
     def segment_minus_overlap(self) -> int:
         return self.nsegment-self.noverlap
@@ -33,9 +32,10 @@ class SegmentedSignal:
         self.arr[m:m+self.nsegment] += arr
 
 
-def hilbert(arr, nsegment: int=8192, noverlap: int=1024) -> np.ndarray:
+def hilbert(arr, nsegment: int = 8192, noverlap: int = 1024) -> np.ndarray:
     # If size is smaller then segmentation size ..
-    if arr.size < nsegment: return _hilbert(arr)
+    if arr.size < nsegment:
+        return _hilbert(arr)
 
     arr = SegmentedSignal(nsegment, noverlap, arr=arr)
     ans = SegmentedSignal(nsegment, noverlap, n=arr.size, dtype=np.complex)
@@ -49,6 +49,6 @@ def hilbert(arr, nsegment: int=8192, noverlap: int=1024) -> np.ndarray:
     # for the last segment where special cases should be treated.)
     for i in range(1, arr.num_segments):
         transformed = _hilbert(arr.segment(i))
-        ans.add_to_segment(i, trapz[:transformed.size]*transformed)   
+        ans.add_to_segment(i, trapz[:transformed.size]*transformed)
 
     return ans.arr

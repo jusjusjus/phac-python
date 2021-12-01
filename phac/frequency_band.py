@@ -1,8 +1,9 @@
-
 from collections import namedtuple
 from typing import Tuple
 
-_FrequencyBand: Tuple[float, float] = namedtuple('FrequencyBand', 'left right')
+_FrequencyBand: Tuple[float, float] = namedtuple(  # type: ignore
+    'FrequencyBand', 'left right')
+
 
 class FrequencyBand(_FrequencyBand):
 
@@ -13,9 +14,12 @@ class FrequencyBand(_FrequencyBand):
 
     def validate(self) -> None:
         try:
-            assert self.left > 0.0, "Left band edge has to be larger than zero %s"%(self,)
-            assert self.right > 0.0, "Right band nedge has to be larger than zero %s"%(self,)
-            assert self.left < self.right, "Right band edge has to be larger than the left %s"%(self,)
+            assert self.left > 0.0, \
+                "Left band edge has to be larger than zero %s" % (self,)
+            assert self.right > 0.0, \
+                "Right band nedge has to be larger than zero %s" % (self,)
+            assert self.left < self.right, \
+                "Right band edge has to be larger than the left %s" % (self,)
         except AssertionError as err:
             raise ValueError(str(err))
 

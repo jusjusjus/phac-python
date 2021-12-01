@@ -1,4 +1,3 @@
-
 import pytest
 import numpy as np
 from .metrics import (
@@ -11,6 +10,7 @@ from .metrics import (
 def test_normalize_fails():
     with pytest.raises(ValueError):
         normalize(np.array([-1., 2]))
+
 
 @pytest.mark.parametrize("x", (np.random.rand(1024),))
 def test_normalize(x):
@@ -27,9 +27,10 @@ def test_shannon_entropy_fails(P):
     with pytest.raises(ValueError):
         shannon_entropy(P)
 
+
 @pytest.mark.parametrize("x, expected", [
-    ([1, 0, 0], 0.0), # entropy is null
-    ([0, 0, 0, 1, 0, 0], 0.0), # entropy is null
+    ([1, 0, 0], 0.0),  # entropy is null
+    ([0, 0, 0, 1, 0, 0], 0.0),  # entropy is null
     ([1, 1, 1], np.log(3)),
     ([1, 1, 1, 1, 1], np.log(5)),
 ])

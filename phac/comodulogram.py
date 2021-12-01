@@ -1,17 +1,17 @@
-
 import itertools
 
 import numpy as np
 import pandas as pd
 
-from .signal import Signal 
-from .frequency_band import FrequencyBand
+from .signal import Signal
 from .metrics import _modulation_index
 from .util import indices_of_binned_phase
 from .filter_series import FilterSeries
 
+
 def comodulogram(samples: np.ndarray, sampling_rate: float,
-        slow_filters: FilterSeries, fast_filters: FilterSeries) -> pd.DataFrame:
+                 slow_filters: FilterSeries,
+                 fast_filters: FilterSeries) -> pd.DataFrame:
     assert isinstance(slow_filters, FilterSeries)
     assert isinstance(fast_filters, FilterSeries)
     signal = Signal(samples, sampling_rate)

@@ -1,4 +1,3 @@
-
 from collections import namedtuple
 from typing import Tuple
 
@@ -8,7 +7,10 @@ from .util import indices_of_binned_phase
 from .metrics import _modulation_index
 from .signal import Signal
 
-PACResult: Tuple[float] = namedtuple("PACResult", "modulation_index mean_phase_coherence")
+PACResult: Tuple[float] = namedtuple(
+    "PACResult", "modulation_index mean_phase_coherence"
+)
+
 
 def phase_amplitude_coupling(samples, sr, slow_band, fast_band):
     signal = Signal(samples, sr)

@@ -1,8 +1,6 @@
-
 from typing import Tuple
 
 import numpy as np
-import scipy.signal
 
 from cached_property import cached_property
 
@@ -11,7 +9,7 @@ from .util import filtfilt
 
 
 class Signal:
-        
+
     def __init__(self, signal: np.ndarray, sampling_rate: float):
         self.signal = signal
         self.sampling_rate = sampling_rate
@@ -19,16 +17,16 @@ class Signal:
     @cached_property
     def time(self) -> np.ndarray:
         return np.arange(self.signal.size)/self.sampling_rate
-                
+
     def filtered(self, band: Tuple[float, float]) -> np.ndarray:
         try:
-            assert isinstance(band, tuple), "band must be tuple, got '%s'"%str(band)
-            assert len(band) == 2, "band '%s'"%str(band)
+            assert isinstance(band, tuple), f"band must be tuple, got '{band}'"
+            assert len(band) == 2, f"band '{band}'"
         except AssertionError as err:
             raise ValueError(str(err))
         return filtfilt(self.signal, self.sampling_rate,
-                fmin=band[0], fmax=band[1])
-        
+                        fmin=band[0], fmax=band[1])
+
     def phase(self, band) -> np.ndarray:
         x = self.filtered(band)
         phi = np.angle(hilbert(x)) + np.pi/2
@@ -43,12 +41,12 @@ class Signal:
         x = filtered_signal - filtered_signal.mean()
         x = np.abs(x)
         maxidx = np.concatenate([
-            [False], (x[2:]<x[1:-1])&(x[:-2]<x[1:-1]), [False]])
+            [False], (x[2:] < x[1:-1]) & (x[:-2] < x[1:-1]), [False]])
         maxis = x[maxidx]
         idx = np.arange(maxidx.size)
         return np.interp(idx, idx[maxidx], maxis)
 
-    def envelope(self, band, method: str='hilbert') -> np.ndarray:
+    def envelope(self, band, method: str = 'hilbert') -> np.ndarray:
         envelope_fn = {
             'hilbert': self._hilbert_envelope,
             'max': self._max_envelope
@@ -57,4 +55,5 @@ class Signal:
         try:
             return envelope_fn[method](x)
         except KeyError:
-            raise ValueError("method (%s) must be one of %s"%(method, envelope_fn.keys()))
+            raise ValueError(f"method ({method}) must be one of "
+                             f"{envelope_fn.keys()}")
